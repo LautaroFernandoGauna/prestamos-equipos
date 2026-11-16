@@ -53,13 +53,12 @@ public class WebSecurityConfig {
                 .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/auth/signin", "/api/auth/signup", "/api/auth/logout").permitAll()
-                        .requestMatchers("/api/test/all", "/h2-console", "/h2-console/**", "/swagger-ui/**",
-    "/swagger-ui.html",
-    "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/signin", "/api/auth/signup").permitAll()
+                        .requestMatchers("/api/test/all", "/h2-console/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/error").permitAll()
+    // Solo ADMIN puede cambiar perfiles
+                        .requestMatchers(HttpMethod.PUT, "/solicitantes/*/perfil").hasRole("ADMIN")
                         .anyRequest().authenticated()
-                );
+);
 
         http.addFilterBefore(
                 new AuthTokenFilter(jwtUtil, userDetailsService, tokenRevocationService),
