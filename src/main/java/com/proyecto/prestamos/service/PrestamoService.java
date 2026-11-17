@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.proyecto.prestamos.dto.PrestamoDTO;
 import com.proyecto.prestamos.dto.PrestamoRequest;
 import com.proyecto.prestamos.model.Equipo;
@@ -46,7 +45,7 @@ public class PrestamoService {
                 .stream().map(PrestamoDTO::de).toList();
     }
 
-    /** Regla clave: no se presta un equipo que no está disponible. */
+    //regla clave no se presta un equipo que no está disponible. 
     public PrestamoDTO prestar(PrestamoRequest datos) {
         if (datos == null || datos.solicitanteId() == null || datos.equipoId() == null) {
             throw new IllegalArgumentException("Indicá el solicitante y el equipo.");
@@ -60,7 +59,7 @@ public class PrestamoService {
             throw new IllegalStateException("El equipo " + equipo.getCodigo() + " no está disponible.");
         }
 
-        // Strategy: el plazo depende del perfil del solicitante.
+        //el plazo depende del perfil del solicitante.
         PoliticaPrestamo politica = politicas.para(solicitante.getPerfil());
 
         equipo.setEstado(EstadoEquipo.PRESTADO);
@@ -74,7 +73,7 @@ public class PrestamoService {
         return PrestamoDTO.de(prestamoRepo.save(p));
     }
 
-    /** Registra la devolución y calcula la multa con la estrategia del perfil (Strategy). */
+    //registra la devolución y calcula la multa con la estrategia del perfil
     public PrestamoDTO devolver(Long prestamoId) {
         Prestamo p = prestamoRepo.findById(prestamoId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Préstamo inexistente."));

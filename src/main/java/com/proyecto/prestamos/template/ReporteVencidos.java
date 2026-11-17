@@ -15,7 +15,7 @@ public class ReporteVencidos extends ReporteTemplate {
     public ReporteVencidos(PrestamoRepository repo) { this.repo = repo; }
 
     @Override public String clave() { return "vencidos"; }
-    @Override protected String titulo() { return "Préstamos vencidos sin devolver"; }
+    @Override protected String titulo() { return "Prestamos vencidos sin devolver"; }
     @Override protected List<Prestamo> obtenerDatos() {
         return repo.findByEstadoOrderByFechaDevolucionPrevistaAsc(EstadoPrestamo.ACTIVO);
     }

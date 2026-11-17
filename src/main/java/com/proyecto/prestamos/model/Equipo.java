@@ -15,12 +15,9 @@ public class Equipo {
    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String codigo;
-
     private String marca;
-
     private String modelo;
 
     @Enumerated(EnumType.STRING)

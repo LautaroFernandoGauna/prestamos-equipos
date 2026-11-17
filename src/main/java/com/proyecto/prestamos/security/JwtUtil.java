@@ -25,8 +25,7 @@ public class JwtUtil {
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
-
-    // Cada inicio de sesión produce un JWT con un identificador único (jti).
+    //genera un jwt unico
     public String generateToken(String username) {
         Date now = new Date();
         return Jwts.builder()
@@ -38,14 +37,14 @@ public class JwtUtil {
                 .compact();
     }
 
-    // getClaims valida criptográficamente la firma y controla el vencimiento.
+    
     public Claims getClaims(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        // Nunca aceptar JWT sin identificador, usuario o fecha de caducidad.
+        
         if (claims.getId() == null || claims.getId().isBlank()
                 || claims.getSubject() == null || claims.getSubject().isBlank()
                 || claims.getExpiration() == null) {
@@ -67,7 +66,6 @@ public class JwtUtil {
             getClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            // Nunca registrar el JWT completo en los logs.
             return false;
         }
     }

@@ -1,7 +1,5 @@
 package com.proyecto.prestamos.controller;
-
 import javax.naming.AuthenticationException;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.proyecto.prestamos.dto.LoginRequest;
 import com.proyecto.prestamos.dto.RegistroRequest;
 import com.proyecto.prestamos.dto.SesionDTO;
@@ -52,7 +49,7 @@ public class AuthController {
         this.revocacion = revocacion;
     }
 
-    // Registro público: siempre crea una cuenta USER con perfil ALUMNO.
+    // el registro de una cuenta va a ser de perfil Alumno por defecto
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registrar una cuenta", description = "Crea una cuenta de usuario con perfil de alumno.")
@@ -65,6 +62,7 @@ public class AuthController {
         return solicitantes.registrar(datos);
     }
 
+    // el inicio de sesion va a dar un token JWT que se pone en autorizacion
     @PostMapping("/signin")
     @Operation(summary = "Iniciar sesión", description = "Valida las credenciales y devuelve un token JWT.")
     @ApiResponses({
@@ -78,6 +76,7 @@ public class AuthController {
         return new TokenResponse(jwtUtil.generateToken(auth.getName()), user.getUsername(), user.getRole());
     }
 
+    //al poner el token va a devolver el usuario y su rol para saber si es un admin, encargado o usuario
     @GetMapping("/me")
     @Operation(summary = "Consultar la sesión actual", description = "Devuelve el usuario y los roles asociados al token.")
     @SecurityRequirement(name = "bearerAuth")
@@ -98,7 +97,8 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Token ausente, inválido o vencido.")
     })
     public String salir(@RequestHeader("Authorization") String authorization) {
-        // Solo llega aquí cuando el filtro JWT autenticó la petición.
+        //llega aca cuando el filtro JWT ya se verifico que el token era valido 
+        // se revoca la sesion para q no se use mas y se guarda en la bd para q no se use mas
         revocacion.revoke(authorization.substring(7));
         return "JWT revocado correctamente.";
     }

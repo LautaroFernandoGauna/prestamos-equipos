@@ -15,7 +15,7 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
     }
 
-    // Por ejemplo: prestar algo que ya está prestado, o devolver dos veces.
+    //por ejemplo prestar algo que ya está prestado o devolver dos veces
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> conflicto(IllegalStateException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));

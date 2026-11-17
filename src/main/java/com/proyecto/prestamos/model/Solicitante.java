@@ -23,7 +23,7 @@ public class Solicitante {
 
     private String email;
 
-    // El perfil lo asigna el ADMIN; define plazo y multa (Strategy). Al registrarse es ALUMNO.
+    // el perfil lo asigna el admin no el solicitante
     @Enumerated(EnumType.STRING)
     private Perfil perfil = Perfil.ALUMNO;
 

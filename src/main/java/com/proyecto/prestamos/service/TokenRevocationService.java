@@ -23,26 +23,21 @@ public class TokenRevocationService {
     }
 
     public boolean isRevoked(String jti) {
-        // También rechazamos JWT antiguos que no tienen jti.
         return jti == null || jti.isBlank() || revokedTokens.existsById(jti);
     }
 
     @Transactional
     public void revoke(String jwt) {
-        // Compruebo si se puede revocar. Se comprueban firma y vencimiento otra vez, 
-        // además de la verificación del filtro.
+        // compruebo si se puede revocar 
         Claims claims = jwtUtil.getClaims(jwt);
         String jti = claims.getId();
         if (jti == null || jti.isBlank() || isRevoked(jti)) {
             throw new IllegalArgumentException("JWT inválido o previamente revocado");
         }
 
-        // Se registra en la base de datos un JWT que ya no debe ser aceptado.
-        // El identificador se conserva hasta la fecha de vencimiento del JWT.
         revokedTokens.save(new RevokedToken(jti, claims.getExpiration().toInstant()));
 
-        // Busca los token ya vencidos y los elimina.
-        // Mantenimiento simple para que los registros vencidos no crezcan indefinidamente.
+        // busca los tokens vencidos y los borra 
         revokedTokens.deleteByExpiresAtBefore(Instant.now());
     }
 }

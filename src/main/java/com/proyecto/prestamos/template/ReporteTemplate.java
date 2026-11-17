@@ -10,7 +10,7 @@ import com.proyecto.prestamos.model.Prestamo;
 public abstract class ReporteTemplate {
      private static final DateTimeFormatter FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    /** Método plantilla: no se puede sobrescribir. */
+    // metodo plantilla: no se puede sobrescribir. 
     public final Reporte generar() {
         List<Prestamo> datos = obtenerDatos();
         List<Prestamo> filtrados = filtrar(datos);
@@ -36,7 +36,7 @@ public abstract class ReporteTemplate {
     protected List<Prestamo> filtrar(List<Prestamo> datos) { return datos; }
 
     protected String[] encabezados() {
-        return new String[]{"Nº", "Usuario", "Equipo", "Prestado", "Vence", "Devuelto", "Multa"};
+        return new String[]{"N:", "Usuario:", "Equipo:", "Prestado:", "Vence:", "Devuelto:", "Multa:"};
     }
 
     protected String[] fila(Prestamo p) {

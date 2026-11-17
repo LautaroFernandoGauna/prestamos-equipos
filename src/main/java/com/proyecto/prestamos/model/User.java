@@ -23,7 +23,7 @@ public class User {
     @JsonIgnore
     private String password;
 
-    // Solo el servidor asigna un rol: ADMIN, ENCARGADO o USER. Un registro público SIEMPRE será USER.
+    // solo el servidor asigna rol encargado o admin
     @Column(name = "user_role")
     private String role = "USER";
 

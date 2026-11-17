@@ -42,7 +42,7 @@ public class SolicitanteService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario ya existe.");
         if (solicitantes.existsByEmailIgnoreCase(datos.email().trim()))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El correo ya está registrado.");
-        // El rol siempre es USER y el perfil siempre ALUMNO: solo ADMIN puede cambiar el perfil.
+        // el perfil por defecto es alumno
         User user = users.save(new User(null, datos.username().trim(), encoder.encode(datos.password()), "USER"));
         Solicitante s = new Solicitante(datos.nombre().trim(),
                 datos.apellido() == null ? "" : datos.apellido().trim(), datos.email().trim(), user);

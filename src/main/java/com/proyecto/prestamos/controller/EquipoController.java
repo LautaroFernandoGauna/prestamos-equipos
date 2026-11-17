@@ -35,14 +35,14 @@ public class EquipoController {
 
     public EquipoController(EquipoService servicio) { this.servicio = servicio; }
 
-    // Cualquier usuario autenticado puede consultar.
+    // cualquiera puede ver los equipos pero solo el admin puede crear nuevos equipos
     @GetMapping
     @Operation(summary = "Listar equipos", description = "Lista todos los equipos o filtra únicamente los disponibles.")
     @ApiResponse(responseCode = "200", description = "Listado de equipos.")
     public List<EquipoDTO> listar(@RequestParam(defaultValue = "false") boolean soloDisponibles) {
         return soloDisponibles ? servicio.disponibles() : servicio.listar();
     }
-
+    
     @GetMapping("/{id}")
     @Operation(summary = "Obtener un equipo", description = "Busca un equipo por su identificador.")
     @ApiResponses({
@@ -53,7 +53,7 @@ public class EquipoController {
         return servicio.buscar(id);
     }
 
-    // Altas, cambios y bajas solo ADMIN: véase WebSecurityConfig.
+    // altas y bajas de equipos es solo para el admin
     @PostMapping @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registrar un equipo", description = "Agrega un equipo al inventario.")
     @ApiResponses({
@@ -61,8 +61,11 @@ public class EquipoController {
             @ApiResponse(responseCode = "400", description = "Los datos enviados no son válidos."),
             @ApiResponse(responseCode = "409", description = "Ya existe un equipo con ese código.")
     })
-    public EquipoDTO crear(@RequestBody EquipoRequest datos) { return servicio.crear(datos); }
+    public EquipoDTO crear(@RequestBody EquipoRequest datos) { 
+        return servicio.crear(datos); 
+    }
 
+    //el admin cambia de estado del equipo
     @PutMapping("/{id}/estado")
     @Operation(summary = "Cambiar el estado de un equipo", description = "Actualiza el estado del equipo, por ejemplo a DISPONIBLE o EN_REPARACION.")
     @ApiResponses({
@@ -76,7 +79,7 @@ public class EquipoController {
             @RequestBody EstadoEquipoRequest datos) {
         return servicio.cambiarEstado(id, datos == null ? null : datos.estado());
     }
-
+    //admin cambia datos del equipo
     @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Eliminar un equipo", description = "Elimina el equipo si no tiene un préstamo activo.")
     @ApiResponses({

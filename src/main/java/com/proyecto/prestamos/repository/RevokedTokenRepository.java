@@ -8,6 +8,6 @@ import com.proyecto.prestamos.model.RevokedToken;
 
 public interface RevokedTokenRepository extends JpaRepository<RevokedToken, String> {
 
-    // Elimina revocaciones de tokens que ya caducaron.
+    // elimina los tokens revocados q expiraron
     long deleteByExpiresAtBefore(Instant instant);
 }

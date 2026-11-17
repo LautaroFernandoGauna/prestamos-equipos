@@ -30,18 +30,20 @@ public class SolicitanteController {
 
     public SolicitanteController(SolicitanteService servicio) { this.servicio = servicio; }
 
-    // Cada cuenta ve únicamente su propio perfil.
+    // cada cuenta ve únicamente su propio perfil
     @GetMapping("/me")
     @Operation(summary = "Consultar mi perfil", description = "Devuelve el perfil asociado al usuario autenticado.")
     @ApiResponse(responseCode = "200", description = "Perfil del usuario.")
     public SolicitanteDTO miPerfil(Authentication auth) { return servicio.miPerfil(auth.getName()); }
 
-    // Listado y búsqueda: ADMIN y ENCARGADO (WebSecurityConfig).
+    // es el listado y busqueda de los perfiles de los solicitantes, el admin puede ver todos los perfiles 
+    //el encargado solo de los alumnos
     @GetMapping
     @Operation(summary = "Listar solicitantes", description = "Devuelve los perfiles de solicitantes registrados.")
     @ApiResponse(responseCode = "200", description = "Listado de solicitantes.")
-    public List<SolicitanteDTO> listar() { return servicio.listar(); }
-
+    public List<SolicitanteDTO> listar() { 
+        return servicio.listar(); 
+    }
     @GetMapping("/{id}")
     @Operation(summary = "Obtener un solicitante", description = "Busca un perfil por su identificador.")
     @ApiResponses({
@@ -53,7 +55,7 @@ public class SolicitanteController {
         return servicio.buscar(id);
     }
 
-    // Solo ADMIN: el solicitante no puede darse a sí mismo un plazo mejor.
+    // el admin puede asignar un perfil al solicitante
     @PutMapping("/{id}/perfil")
     @Operation(summary = "Asignar un perfil", description = "Actualiza el perfil del solicitante.")
     @ApiResponses({

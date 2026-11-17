@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.proyecto.prestamos.dto.EquipoRequest;
 import com.proyecto.prestamos.dto.RegistroRequest;
+import com.proyecto.prestamos.dto.SolicitanteDTO;
 import com.proyecto.prestamos.model.Equipo;
 import com.proyecto.prestamos.model.EstadoEquipo;
 import com.proyecto.prestamos.model.Perfil;
@@ -42,29 +43,27 @@ public class DatosDemo implements CommandLineRunner {
     public void run(String... args) {
         if (equipoRepo.count() > 0) return;
 
-        solicitanteService.registrar(new RegistroRequest("alumno", "alumno123", "Lucía", "Alumna", "alumno@demo.com"));
-        var docente = solicitanteService.registrar(
-                new RegistroRequest("docente", "docente123", "Martín", "Docente", "docente@demo.com"));
+        solicitanteService.registrar(new RegistroRequest("luciaPerez", "alumno123", "Lucía", "Perez", "luciaPerez@gmail.com"));
+        SolicitanteDTO docente = solicitanteService.registrar(new RegistroRequest("docente", "martinRodri", "Martín", "Rodriguez", "martinprofe@gmail.com"));
         solicitanteService.asignarPerfil(docente.idSolicitante(), Perfil.DOCENTE);
 
-        equipoService.crear(new EquipoRequest(TipoEquipo.NOTEBOOK, "NB-001", "Dell", "Latitude 5420", "16 GB RAM"));
-        equipoService.crear(new EquipoRequest(TipoEquipo.NOTEBOOK, "NB-002", "Lenovo", "ThinkPad E14", "8 GB RAM"));
-        equipoService.crear(new EquipoRequest(TipoEquipo.NOTEBOOK, "NB-003", "HP", "ProBook 450", "8 GB RAM"));
-        equipoService.crear(new EquipoRequest(TipoEquipo.PROYECTOR, "PR-001", "Epson", "X49", "3600 lúmenes"));
-        equipoService.crear(new EquipoRequest(TipoEquipo.TABLET, "TB-001", "Samsung", "Galaxy Tab A8", "10,5 pulgadas"));
+        equipoService.crear(new EquipoRequest(TipoEquipo.NOTEBOOK, "N001", "Dell", "Latitude ", "16 GB RAM"));
+        equipoService.crear(new EquipoRequest(TipoEquipo.NOTEBOOK, "N002", "Lenovo", "ThinkPad ", "8 GB RAM"));
+        equipoService.crear(new EquipoRequest(TipoEquipo.NOTEBOOK, "N003", "HP", "Pavilion", "8 GB RAM"));
+        equipoService.crear(new EquipoRequest(TipoEquipo.PROYECTOR, "P001", "Fika", "FIKP8", "HD"));
+        equipoService.crear(new EquipoRequest(TipoEquipo.TABLET, "T001", "Samsung", "Galaxy A11", "8 pulgadas"));
 
-        // Préstamo vencido de ejemplo para probar la multa y el reporte de vencidos.
-        Equipo nb3 = equipoRepo.findAllByOrderByCodigoAsc().stream()
-                .filter(e -> e.getCodigo().equals("NB-003")).findFirst().orElseThrow();
-        Solicitante alumno = solicitanteRepo.findByUsuarioUsername("alumno").orElseThrow();
-
+        
+        Equipo net3 = equipoRepo.findAllByOrderByCodigoAsc().stream()
+                .filter(e -> e.getCodigo().equals("N003")).findFirst().orElseThrow();
+        Solicitante alumno = solicitanteRepo.findByUsuarioUsername("luciaPerez").orElseThrow();
         Prestamo vencido = new Prestamo();
         vencido.setSolicitante(alumno);
-        vencido.setEquipo(nb3);
+        vencido.setEquipo(net3);
         vencido.setFechaPrestamo(LocalDate.now().minusDays(8));
         vencido.setFechaDevolucionPrevista(LocalDate.now().minusDays(5));
-        nb3.setEstado(EstadoEquipo.PRESTADO);
-        equipoRepo.save(nb3);
+        net3.setEstado(EstadoEquipo.PRESTADO);
+        equipoRepo.save(net3);
         prestamoRepo.save(vencido);
     }
 }

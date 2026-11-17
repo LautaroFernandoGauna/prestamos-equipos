@@ -65,7 +65,7 @@ public class EquipoService {
             throw new IllegalStateException("No se puede eliminar un equipo que está prestado.");
         }
         repo.delete(e);
-        repo.flush(); // si tiene historial de préstamos, falla acá y se informa como conflicto
+        repo.flush(); // si tiene historial de prestamos falla aca y se informa como conflicto
     }
 
     private Equipo entidad(Long id) {

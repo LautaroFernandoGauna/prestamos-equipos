@@ -31,18 +31,22 @@ public class PrestamoController {
 
     public PrestamoController(PrestamoService servicio) { this.servicio = servicio; }
 
-    // Préstamos activos: ADMIN y ENCARGADO.
+    // prestamos activos los puede ver el admin y encargado
     @GetMapping
     @Operation(summary = "Listar préstamos activos", description = "Devuelve los préstamos que todavía no se han cerrado.")
     @ApiResponse(responseCode = "200", description = "Listado de préstamos activos.")
     public List<PrestamoDTO> activos() { return servicio.activos(); }
 
-    // Cada usuario consulta solo los suyos.
+    // los usuarios ven sus prestamos
     @GetMapping("/mios")
     @Operation(summary = "Consultar mis préstamos", description = "Devuelve los préstamos asociados al usuario autenticado.")
     @ApiResponse(responseCode = "200", description = "Listado de préstamos del usuario.")
-    public List<PrestamoDTO> mios(Authentication auth) { return servicio.mios(auth.getName()); }
+    
+    public List<PrestamoDTO> mios(Authentication auth) { 
+        return servicio.mios(auth.getName()); 
+    }
 
+    
     @PostMapping("/solicitar") @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Solicitar un préstamo", description = "Registra una solicitud para prestar un equipo a un solicitante.")
     @ApiResponses({
@@ -50,7 +54,9 @@ public class PrestamoController {
             @ApiResponse(responseCode = "400", description = "Faltan datos o los identificadores no son válidos."),
             @ApiResponse(responseCode = "409", description = "El equipo no está disponible.")
     })
-    public PrestamoDTO prestar(@RequestBody PrestamoRequest datos) { return servicio.prestar(datos); }
+    public PrestamoDTO prestar(@RequestBody PrestamoRequest datos) {
+         return servicio.prestar(datos); 
+        }
 
     // La multa la calcula el servidor según el perfil; el cliente no envía importes.
     @PostMapping("/{id}/devolver")

@@ -55,7 +55,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/auth/signin", "/api/auth/signup").permitAll()
                         .requestMatchers("/api/test/all", "/h2-console/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/error").permitAll()
-    // Solo ADMIN puede cambiar perfiles
+    // solo el admin puede cambiar perfiles
                         .requestMatchers(HttpMethod.PUT, "/solicitantes/*/perfil").hasRole("ADMIN")
                         .anyRequest().authenticated()
 );

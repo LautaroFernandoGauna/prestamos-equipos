@@ -17,10 +17,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/**
- * Autentica solo JWT válidos cuya identificación jti NO esté revocada.
- * Se registra exclusivamente en la cadena de Spring Security.
- */
+
+ //autentica solo JWT válidos cuya identificación jti no este revocada.
+ //se registra en la cadena de Spring Security.
+ 
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -41,7 +41,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String jwt = parseJwt(request);
         try {
             if (jwt != null) {
-                // Valida la firma, expiración y claims una sola vez.
+                
                 Claims claims = jwtUtil.getClaims(jwt);
                 if (!tokenRevocationService.isRevoked(claims.getId())) {
                     String username = claims.getSubject();
@@ -54,11 +54,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            // JWT inválido/usuario inexistente: no se crea una autenticación.
+            
             SecurityContextHolder.clearContext();
         }
 
-        // Spring Security responderá 401 si el endpoint requiere autenticación.
+        // spring security responde 401 si el endpoint necesita autenticacion
         filterChain.doFilter(request, response);
     }
 
